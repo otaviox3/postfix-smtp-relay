@@ -2,6 +2,21 @@
 
 Todas as mudanças relevantes deste projeto serão documentadas neste arquivo.
 
+## v1.0.6 - Release automática aprimorada
+
+### Adicionado
+
+* Workflow de Release automático via GitHub Actions.
+* Geração automática de arquivos `.zip` e `.tar.gz`.
+* Descrição da Release baseada no `CHANGELOG.md`.
+* Fallback automático caso a versão não exista no changelog.
+
+### Melhorado
+
+* Processo de publicação de novas versões.
+* Padronização das notas de release.
+* Automação do ciclo de distribuição do projeto.
+
 ## v1.0.3 - Atualização de documentação
 
 * Removidas referências às versões antigas do projeto.
