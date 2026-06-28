@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  margin: 0;
+  padding: 32px;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+input, select, button {
+  display: block;
+  width: 100%;
+  margin: 8px 0 18px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background: #161b22;
+  color: #e6edf3;
+}
+
+button {
+  background: #238636;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+a {
+  color: #58a6ff;
+}
+
+pre {
+  white-space: pre-wrap;
+  background: #161b22;
+  border: 1px solid #30363d;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.card {
+  border: 1px solid #30363d;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+}
+
+.card.ok {
+  border-color: #238636;
+}
+
+.card.fail {
+  border-color: #da3633;
+}

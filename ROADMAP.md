@@ -3,14 +3,18 @@
 ## Concluído
 
 - [x] Instalador inicial.
-- [x] Suporte a STARTTLS/TLS 1.2.
-- [x] SMTP AUTH via SASL.
 - [x] Scripts de teste.
-- [x] Documentação inicial.
+- [x] Documentação em português.
+- [x] GitHub Actions.
+- [x] Rollback.
+- [x] Interface web local.
+- [x] Relatório técnico local.
 
 ## Planejado
 
-- [ ] Ansible.
+- [ ] Playbook Ansible.
 - [ ] Dockerfile de laboratório.
 - [ ] GitHub Pages.
-- [ ] Exemplos por stack de aplicação.
+- [ ] Exemplos para JBoss, WildFly, Tomcat, Spring Boot e PHP.
+- [ ] Guia de alta disponibilidade.
+- [ ] Monitoramento com Prometheus/Grafana.

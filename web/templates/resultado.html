@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Resultado - Postfix SMTP Relay</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <h1>Resultado da validação</h1>
+    <p>Executado em {{ agora }}</p>
+
+    <section class="env">
+      <h2>Parâmetros</h2>
+      <pre>{{ env }}</pre>
+    </section>
+
+    {% for nome, r in resultados %}
+    <section class="card {% if r.rc == 0 %}ok{% else %}fail{% endif %}">
+      <h2>{{ nome }} - {% if r.rc == 0 %}OK{% else %}Falhou{% endif %}</h2>
+      <p><strong>Comando:</strong> {{ r.cmd }}</p>
+      <h3>Saída</h3>
+      <pre>{{ r.stdout }}</pre>
+      {% if r.stderr %}
+      <h3>Erro</h3>
+      <pre>{{ r.stderr }}</pre>
+      {% endif %}
+    </section>
+    {% endfor %}
+
+    <p><a href="/">Voltar</a> | <a href="/logs">Ver logs</a></p>
+  </main>
+</body>
+</html>

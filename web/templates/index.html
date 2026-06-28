@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Postfix SMTP Relay - Validação</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <h1>Postfix SMTP Relay</h1>
+    <p>Interface web local para validar DNS, conectividade, TLS e fila do Postfix.</p>
+
+    <form method="post" action="/validar">
+      <label>SMTP Host</label>
+      <input name="smtp_host" value="smtp.exemplo.com">
+
+      <label>SMTP Port</label>
+      <input name="smtp_port" value="25">
+
+      <label>TLS Mode</label>
+      <select name="tls_mode">
+        <option value="starttls">starttls</option>
+        <option value="wrapper">wrapper</option>
+      </select>
+
+      <label>Mail From</label>
+      <input name="mail_from" value="naoresponda@exemplo.com">
+
+      <label>Test To</label>
+      <input name="test_to" value="destino@exemplo.com">
+
+      <button type="submit">Validar</button>
+    </form>
+
+    <p><a href="/logs">Ver últimos logs do Postfix</a></p>
+  </main>
+</body>
+</html>

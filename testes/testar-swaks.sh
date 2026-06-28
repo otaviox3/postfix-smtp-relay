@@ -19,10 +19,10 @@ echo "[INFO] Testando SMTP AUTH com swaks"
 
 if [[ "$TLS_MODE" == "wrapper" ]]; then
   swaks --to "$TEST_TO" --from "$MAIL_FROM" --server "$SMTP_HOST" --port "$SMTP_PORT" \
-  --helo "$HELO" --tls-on-connect --tls-protocol TLSv1_2 \
-  --auth LOGIN --auth-user "$SMTP_USER" --auth-password "$SMTP_PASS"
+    --helo "$HELO" --tls-on-connect --tls-protocol TLSv1_2 \
+    --auth LOGIN --auth-user "$SMTP_USER" --auth-password "$SMTP_PASS"
 else
   swaks --to "$TEST_TO" --from "$MAIL_FROM" --server "$SMTP_HOST" --port "$SMTP_PORT" \
-  --helo "$HELO" --tls --tls-protocol TLSv1_2 \
-  --auth LOGIN --auth-user "$SMTP_USER" --auth-password "$SMTP_PASS"
+    --helo "$HELO" --tls --tls-protocol TLSv1_2 \
+    --auth LOGIN --auth-user "$SMTP_USER" --auth-password "$SMTP_PASS"
 fi
