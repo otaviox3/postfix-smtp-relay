@@ -1,65 +1,65 @@
 name: Release
 
 on:
-push:
-tags:
-- "v*"
+  push:
+    tags:
+      - "v*"
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
-release:
-runs-on: ubuntu-latest
+  release:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  - name: Criar arquivos compactados
-    run: |
-      VERSION=${GITHUB_REF_NAME}
+      - name: Criar arquivos compactados
+        run: |
+          VERSION=${GITHUB_REF_NAME}
 
-      git archive \
-        --format=tar.gz \
-        --prefix=postfix-smtp-relay-${VERSION}/ \
-        -o postfix-smtp-relay-${VERSION}.tar.gz \
-        HEAD
+          git archive \
+            --format=tar.gz \
+            --prefix=postfix-smtp-relay-${VERSION}/ \
+            -o postfix-smtp-relay-${VERSION}.tar.gz \
+            HEAD
 
-      git archive \
-        --format=zip \
-        --prefix=postfix-smtp-relay-${VERSION}/ \
-        -o postfix-smtp-relay-${VERSION}.zip \
-        HEAD
+          git archive \
+            --format=zip \
+            --prefix=postfix-smtp-relay-${VERSION}/ \
+            -o postfix-smtp-relay-${VERSION}.zip \
+            HEAD
 
-  - name: Extrair notas do CHANGELOG
-    run: |
-      VERSION="${GITHUB_REF_NAME}"
+      - name: Extrair notas do CHANGELOG
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
 
-      awk "
-        \$0 ~ \"^## ${VERSION}\" {flag=1; next}
-        /^## v/ && flag {exit}
-        flag
-      " CHANGELOG.md > RELEASE_NOTES.md
+          awk "
+            \$0 ~ \"^## ${VERSION}\" {flag=1; next}
+            /^## v/ && flag {exit}
+            flag
+          " CHANGELOG.md > RELEASE_NOTES.md
 
-      if [ ! -s RELEASE_NOTES.md ]; then
-        cat > RELEASE_NOTES.md <<EOF
-      Release automática de ${VERSION}
+          if [ ! -s RELEASE_NOTES.md ]; then
+            cat > RELEASE_NOTES.md <<EOF2
+          Release automática de ${VERSION}
 
-      Consulte o CHANGELOG.md para mais detalhes.
-      EOF
-      fi
+          Consulte o CHANGELOG.md para mais detalhes.
+          EOF2
+          fi
 
-  - name: Mostrar notas geradas
-    run: |
-      echo "========== RELEASE NOTES =========="
-      cat RELEASE_NOTES.md
-      echo "==================================="
+      - name: Mostrar notas geradas
+        run: |
+          echo "========== RELEASE NOTES =========="
+          cat RELEASE_NOTES.md
+          echo "==================================="
 
-  - name: Criar Release
-    uses: softprops/action-gh-release@v2
-    with:
-      body_path: RELEASE_NOTES.md
-      files: |
-        postfix-smtp-relay-*.tar.gz
-        postfix-smtp-relay-*.zip
+      - name: Criar Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            postfix-smtp-relay-*.tar.gz
+            postfix-smtp-relay-*.zip
