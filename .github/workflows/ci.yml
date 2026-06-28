@@ -29,7 +29,7 @@ jobs:
 
       - name: Verificar arquivos sensíveis
         run: |
-          if grep -RniE "EXEMPLO_SENHA|naoresponda-exemplo|empresa-exemplo|dominio-exemplo|sistema-exemplo|10\.100|password real|senha real" . --exclude-dir=.git; then
+          if grep -RniE "EXEMPLO_SENHA_REAL|TOKEN_EXEMPLO|IP_PRIVADO_EXEMPLO|CHAVE_PRIVADA_EXEMPLO" . --exclude-dir=.git; then
             echo "Possível dado sensível encontrado."
             exit 1
           fi

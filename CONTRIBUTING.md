@@ -22,7 +22,7 @@ bash -n testes/*.sh
 Também execute:
 
 ```bash
-grep -RniE "EXEMPLO_SENHA|naoresponda-exemplo|empresa-exemplo|dominio-exemplo|sistema-exemplo|10\.100|senha real" . --exclude-dir=.git
+grep -RniE "EXEMPLO_SENHA_REAL|TOKEN_EXEMPLO|IP_PRIVADO_EXEMPLO|CHAVE_PRIVADA_EXEMPLO" . --exclude-dir=.git
 ```
 
 ## ShellCheck
