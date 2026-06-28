@@ -3,3 +3,5 @@ sasl_passwd.db
 *.secret
 .env
 *.log
+__pycache__/
+*.pyc

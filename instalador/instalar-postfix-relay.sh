@@ -158,7 +158,10 @@ restart(){
   log "Reiniciando Postfix..."
   systemctl enable postfix
   systemctl restart postfix
-  [[ "$CLEAR_QUEUE" == "yes" ]] && postsuper -d ALL || true
+
+  if [[ "$CLEAR_QUEUE" == "yes" ]]; then
+    postsuper -d ALL
+  fi
 }
 
 validate(){
@@ -182,7 +185,7 @@ test_local(){
   if command -v s-nail >/dev/null 2>&1; then
     cmd=s-nail
   elif command -v mailx >/dev/null 2>&1; then
-    cmd=mailx
+    cmd="mailx"
   else
     warn "s-nail/mailx não encontrado."
     return 0
