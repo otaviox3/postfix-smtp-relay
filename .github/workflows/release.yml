@@ -12,7 +12,6 @@ jobs:
 release:
 runs-on: ubuntu-latest
 
-```
 steps:
   - name: Checkout
     uses: actions/checkout@v4
@@ -45,7 +44,7 @@ steps:
 
       if [ ! -s RELEASE_NOTES.md ]; then
         cat > RELEASE_NOTES.md <<EOF
-      Release automática de ${VERSION}
+      Release automÃ¡tica de ${VERSION}
 
       Consulte o CHANGELOG.md para mais detalhes.
       EOF
@@ -64,4 +63,3 @@ steps:
       files: |
         postfix-smtp-relay-*.tar.gz
         postfix-smtp-relay-*.zip
-```
