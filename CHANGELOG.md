@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes deste projeto serão documentadas neste arquivo.
 
+## v1.0.7 - Correção do workflow de release
+
+* Corrigida a identação do workflow `release.yml`.
+* Adicionado suporte à geração automática das notas de release a partir do `CHANGELOG.md`.
+* Corrigido o pipeline de criação de Releases no GitHub Actions.
+* Mantida a geração automática dos artefatos `.zip` e `.tar.gz`.
+
 ## v1.0.6 - Release automática aprimorada
 
 ### Adicionado
