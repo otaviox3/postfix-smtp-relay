@@ -2,6 +2,12 @@
 
 Todas as mudanças relevantes deste projeto serão documentadas neste arquivo.
 
+## v1.0.9 - Testes automáticos funcionais
+
+* Adicionado workflow `tests.yml`.
+* Scripts de relatório agora funcionam mesmo sem Postfix instalado.
+* Melhor tratamento de erros e compatibilidade com GitHub Actions.
+
 ## v1.0.8 - Integração com CodeQL
 
 * Adicionada análise estática de segurança usando GitHub CodeQL.
