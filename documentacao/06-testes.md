@@ -1,24 +1,57 @@
 # Testes
 
-## Resumo
-
-Este capítulo faz parte da documentação do projeto **Postfix SMTP Relay**.
-
-A solução permite que aplicações legadas enviem e-mails para `127.0.0.1:25`, enquanto o Postfix realiza autenticação SMTP, STARTTLS/TLS, fila, logs e encaminhamento externo.
-
-## Fluxo principal
-
-```mermaid
-flowchart LR
-    A[Aplicação legada] -->|127.0.0.1:25| B[Postfix local]
-    B -->|SMTP AUTH + STARTTLS + TLS 1.2| C[SMTP externo]
-    C --> D[Destinatários]
-```
-
-## Comandos úteis
+## Teste de DNS e porta
 
 ```bash
-postconf -n
-journalctl -fu postfix
-postqueue -p
+SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" ./testes/testar-conectividade.sh
+```
+
+Esse teste valida:
+
+- resolução DNS;
+- conectividade TCP;
+- liberação da porta.
+
+## Teste TLS
+
+```bash
+SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" TLS_MODE="starttls" ./testes/testar-openssl.sh
+```
+
+Esse teste valida se o SMTP aceita STARTTLS/TLS.
+
+## Teste SMTP AUTH com Swaks
+
+```bash
+SMTP_HOST="smtp.exemplo.com" \
+SMTP_PORT="25" \
+SMTP_USER="naoresponda@exemplo.com" \
+SMTP_PASS="SENHA_AQUI" \
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+./testes/testar-swaks.sh
+```
+
+Esse teste valida:
+
+- conexão;
+- STARTTLS;
+- autenticação;
+- envio SMTP.
+
+## Teste local via Postfix
+
+```bash
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+./testes/testar-postfix.sh
+```
+
+Esse teste valida se o Postfix local está encaminhando mensagens corretamente.
+
+## Resultado esperado
+
+```text
+status=sent
+250 Message accepted
 ```

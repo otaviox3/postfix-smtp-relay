@@ -1,24 +1,69 @@
 # Validação
 
-## Resumo
-
-Este capítulo faz parte da documentação do projeto **Postfix SMTP Relay**.
-
-A solução permite que aplicações legadas enviem e-mails para `127.0.0.1:25`, enquanto o Postfix realiza autenticação SMTP, STARTTLS/TLS, fila, logs e encaminhamento externo.
-
-## Fluxo principal
-
-```mermaid
-flowchart LR
-    A[Aplicação legada] -->|127.0.0.1:25| B[Postfix local]
-    B -->|SMTP AUTH + STARTTLS + TLS 1.2| C[SMTP externo]
-    C --> D[Destinatários]
-```
-
-## Comandos úteis
+## Validar serviço
 
 ```bash
-postconf -n
+systemctl status postfix -l --no-pager
+```
+
+Esperado:
+
+```text
+Active: active (running)
+```
+
+## Validar configuração ativa
+
+```bash
+postconf -n | egrep 'relayhost|smtp_tls|smtp_sasl|inet_interfaces|mydestination'
+```
+
+## Validar credencial SASL
+
+```bash
+postmap -q "[smtp.exemplo.com]:25" hash:/etc/postfix/sasl_passwd
+```
+
+Esperado:
+
+```text
+naoresponda@exemplo.com:SENHA_AQUI
+```
+
+## Validar rede
+
+```bash
+nc -vz -w 5 smtp.exemplo.com 25
+```
+
+Esperado:
+
+```text
+succeeded
+```
+
+## Validar TLS
+
+```bash
+openssl s_client -starttls smtp -connect smtp.exemplo.com:25 -tls1_2 -servername smtp.exemplo.com
+```
+
+Esperado:
+
+```text
+Verify return code: 0 (ok)
+```
+
+## Validar logs
+
+```bash
 journalctl -fu postfix
-postqueue -p
+```
+
+Durante envio bem-sucedido:
+
+```text
+Trusted TLS connection established
+status=sent
+250 Message accepted
 ```

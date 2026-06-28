@@ -1,24 +1,48 @@
 # Segurança
 
-## Resumo
+## Não versionar dados sensíveis
 
-Este capítulo faz parte da documentação do projeto **Postfix SMTP Relay**.
+Nunca envie para o GitHub:
 
-A solução permite que aplicações legadas enviem e-mails para `127.0.0.1:25`, enquanto o Postfix realiza autenticação SMTP, STARTTLS/TLS, fila, logs e encaminhamento externo.
+- senhas SMTP;
+- tokens;
+- chaves privadas;
+- IPs internos;
+- domínios internos;
+- hostnames reais;
+- nomes de aplicações internas;
+- arquivos `.env`;
+- arquivos `sasl_passwd`;
+- arquivos `sasl_passwd.db`.
 
-## Fluxo principal
+## Permissões
 
-```mermaid
-flowchart LR
-    A[Aplicação legada] -->|127.0.0.1:25| B[Postfix local]
-    B -->|SMTP AUTH + STARTTLS + TLS 1.2| C[SMTP externo]
-    C --> D[Destinatários]
-```
-
-## Comandos úteis
+O arquivo de credenciais deve ter permissão restrita:
 
 ```bash
-postconf -n
-journalctl -fu postfix
-postqueue -p
+chmod 600 /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.db
 ```
+
+## Escuta local
+
+Recomendado:
+
+```text
+inet_interfaces = loopback-only
+```
+
+Isso evita expor o Postfix como relay aberto na rede.
+
+## Placeholders
+
+Use exemplos genéricos:
+
+```text
+smtp.exemplo.com
+naoresponda@exemplo.com
+SENHA_AQUI
+```
+
+## Rotação de senha
+
+Após testes ou compartilhamento temporário de credenciais, rotacione a senha SMTP.

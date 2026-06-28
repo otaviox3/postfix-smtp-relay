@@ -1,24 +1,68 @@
 # Instalação
 
-## Resumo
+## Pré-requisitos
 
-Este capítulo faz parte da documentação do projeto **Postfix SMTP Relay**.
+Distribuições recomendadas:
 
-A solução permite que aplicações legadas enviem e-mails para `127.0.0.1:25`, enquanto o Postfix realiza autenticação SMTP, STARTTLS/TLS, fila, logs e encaminhamento externo.
+- Oracle Linux 8/9
+- RHEL 8/9
+- Rocky Linux 8/9
+- AlmaLinux 8/9
 
-## Fluxo principal
+Pacotes utilizados:
 
-```mermaid
-flowchart LR
-    A[Aplicação legada] -->|127.0.0.1:25| B[Postfix local]
-    B -->|SMTP AUTH + STARTTLS + TLS 1.2| C[SMTP externo]
-    C --> D[Destinatários]
-```
+- postfix
+- cyrus-sasl
+- cyrus-sasl-plain
+- openssl
+- swaks
+- s-nail ou mailx
+- nmap-ncat
 
-## Comandos úteis
+## Instalação interativa
 
 ```bash
+chmod +x instalador/instalar-postfix-relay.sh
+sudo ./instalador/instalar-postfix-relay.sh
+```
+
+O instalador solicita:
+
+- servidor SMTP;
+- porta;
+- modo TLS;
+- usuário SMTP;
+- senha SMTP;
+- remetente;
+- destinatário de teste.
+
+## Instalação com variáveis
+
+```bash
+sudo SMTP_HOST="smtp.exemplo.com" \
+SMTP_PORT="25" \
+TLS_MODE="starttls" \
+TLS_PROTOCOL="TLSv1.2" \
+SMTP_USER="naoresponda@exemplo.com" \
+SMTP_PASS="SENHA_AQUI" \
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+RUN_SEND_TEST="yes" \
+./instalador/instalar-postfix-relay.sh
+```
+
+## Modos TLS
+
+| Porta | TLS_MODE | Descrição |
+|---|---|---|
+| 25 | starttls | SMTP com STARTTLS |
+| 587 | starttls | Submission com STARTTLS |
+| 465 | wrapper | SMTPS direto |
+
+## Verificação após instalação
+
+```bash
+systemctl status postfix -l --no-pager
 postconf -n
-journalctl -fu postfix
-postqueue -p
+journalctl -u postfix -n 50 --no-pager
 ```
