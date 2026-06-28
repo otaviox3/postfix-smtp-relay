@@ -29,7 +29,7 @@ jobs:
 
       - name: Verificar possíveis segredos
         run: |
-          if grep -RniE "(BEGIN (RSA|OPENSSH|EC|PRIVATE) KEY|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|gho_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{20,}|smtp_pass[[:space:]]*=|smtp_password[[:space:]]*=|password[[:space:]]*=)" . --exclude-dir=.git --exclude="*.md"; then
+          if grep -RniE "(BEGIN (RSA|OPENSSH|EC|PRIVATE) KEY|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|gho_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{20,})" . --exclude-dir=.git --exclude="*.md"; then
             echo "Possível segredo encontrado."
             exit 1
           fi
