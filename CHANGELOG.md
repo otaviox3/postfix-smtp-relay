@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes deste projeto serão documentadas neste arquivo.
 
+## v1.0.8 - Integração com CodeQL
+
+* Adicionada análise estática de segurança usando GitHub CodeQL.
+* Novo workflow `.github/workflows/codeql.yml`.
+* Execução automática em push, pull request e semanalmente.
+* Preparação do projeto para futuras melhorias de segurança.
+
 ## v1.0.7 - Correção do workflow de release
 
 * Corrigida a identação do workflow `release.yml`.
