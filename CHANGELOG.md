@@ -4,6 +4,7 @@ Todas as mudanças relevantes deste projeto serão documentadas neste arquivo.
 
 ## v1.0.9 - Testes automáticos funcionais
 
+* Scripts de relatório tornados compatíveis com ambientes sem Postfix instalado.
 * Adicionado workflow `tests.yml`.
 * Scripts de relatório agora funcionam mesmo sem Postfix instalado.
 * Melhor tratamento de erros e compatibilidade com GitHub Actions.

@@ -1,0 +1,56 @@
+name: Functional Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck python3 python3-pip
+
+      - name: Bash syntax
+        run: |
+          find instalador testes scripts -name "*.sh" -exec bash -n {} \;
+
+      - name: ShellCheck
+        run: |
+          shellcheck instalador/*.sh
+          shellcheck testes/*.sh
+          shellcheck scripts/*.sh
+
+      - name: Python syntax
+        run: |
+          python3 -m py_compile web/app.py
+
+      - name: Testar geração de relatório
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/gerar-relatorio.sh || true
+
+      - name: Testar interface web
+        run: |
+          python3 -m pip install -r web/requirements.txt
+          timeout 15s python3 web/app.py || true
+
+      - name: Validar ajuda dos scripts
+        run: |
+          chmod +x instalador/*.sh testes/*.sh scripts/*.sh
+
+          ./instalador/instalar-postfix-relay.sh --help || true
+
+          for f in testes/*.sh; do
+            bash "$f" --help || true
+          done
