@@ -1,11 +1,15 @@
 # Postfix SMTP Relay
 
+![CI](https://github.com/otaviox3/postfix-smtp-relay/actions/workflows/ci.yml/badge.svg)
+![Release](https://img.shields.io/github/v/release/otaviox3/postfix-smtp-relay)
+![License](https://img.shields.io/github/license/otaviox3/postfix-smtp-relay)
+![Last Commit](https://img.shields.io/github/last-commit/otaviox3/postfix-smtp-relay)
+![Repo Size](https://img.shields.io/github/repo-size/otaviox3/postfix-smtp-relay)
+![Issues](https://img.shields.io/github/issues/otaviox3/postfix-smtp-relay)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Linux](https://img.shields.io/badge/Linux-Oracle%20Linux%20%7C%20RHEL%20%7C%20Rocky%20%7C%20Alma-red)
 ![Postfix](https://img.shields.io/badge/Postfix-SMTP%20Relay-blue)
 ![Shell](https://img.shields.io/badge/Shell-Bash-green)
-![CI](https://img.shields.io/badge/GitHub%20Actions-ShellCheck-blue)
-![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)
 
 ## Sobre o projeto
 
@@ -312,7 +316,7 @@ TEST_TO="destino@exemplo.com" \
 
 ![Interface web local](documentacao/imagens/interface-web-local.png)
 
-A versão v1.3 adicionou uma interface web local para validação operacional.
+Uma das funcionalidades atuais do projeto é a interface web local para validação operacional.
 
 ```bash
 cd web
@@ -343,7 +347,7 @@ A interface permite:
 
 ## Relatório técnico
 
-A versão v1.3 também adicionou geração de relatório local.
+O projeto também possui geração de relatório local para apoio às validações e troubleshooting.
 
 ```bash
 ./scripts/gerar-relatorio.sh
