@@ -192,4 +192,4 @@ Nunca suba credenciais reais para o GitHub. Use exemplos como `smtp.exemplo.com`
 
 ## Autor
 
-Desenvolvido por **Otávio Henrique de Santana Azevedo**.
+Desenvolvido por **Otávio Azevedo**.
