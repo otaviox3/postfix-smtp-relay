@@ -308,6 +308,10 @@ TEST_TO="destino@exemplo.com" \
 
 ## Interface web local
 
+### Visual da interface
+
+![Interface web local](documentacao/imagens/interface-web-local.png)
+
 A versão v1.3 adicionou uma interface web local para validação operacional.
 
 ```bash
