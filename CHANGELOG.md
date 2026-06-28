@@ -1,34 +1,29 @@
 # Changelog
 
-## v1.3.1 - Correção de CI, ShellCheck e README
+Todas as mudanças relevantes deste projeto serão documentadas neste arquivo.
 
-### Corrigido
+## v1.0.3 - Atualização de documentação
 
-- Remoção de arquivo Python compilado `__pycache__`.
-- Inclusão de `__pycache__/` e `*.pyc` no `.gitignore`.
-- Correção do aviso ShellCheck `SC2015`.
-- Correção do aviso ShellCheck `SC2209`.
-- Restauração do README mais completo, mantendo as melhorias da interface web, relatório técnico e CI.
+* Removidas referências às versões antigas do projeto.
+* README atualizado para refletir o estado atual do repositório.
+* Ajustes de organização da documentação.
 
-## v1.3.0 - Interface web local e CI corrigido
+## v1.0.2 - Screenshot da interface web
 
-### Adicionado
+* Adicionada imagem da interface web local no README.
+* Melhorias de apresentação da documentação.
 
-- Interface web local com Flask.
-- Página de validação por navegador.
-- Página de logs do Postfix.
-- Script de geração de relatório.
-- Documentação da interface web.
-- CI validando aplicação Python.
+## v1.0.1 - Correções de CI
 
-## v1.2.0 - Melhorias de README, testes e CI
+* Ajustes no GitHub Actions.
+* Correções apontadas pelo ShellCheck.
+* Limpeza do repositório e remoção de referências específicas.
 
-### Adicionado
+## v1.0.0 - Versão inicial pública
 
-- README mais completo.
-- Teste de DNS.
-- Teste de fila do Postfix.
-- Script `testar-tudo.sh`.
-- CI com validação de sintaxe Bash.
-- ShellCheck.
-- Verificação básica contra dados sensíveis.
+* Instalador automatizado do Postfix Relay SMTP.
+* Scripts de validação e troubleshooting.
+* Interface web local para validação operacional.
+* Geração de relatórios.
+* Documentação completa.
+* Integração com GitHub Actions.

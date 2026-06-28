@@ -22,6 +22,10 @@ bash -n testes/*.sh
 Também execute:
 
 ```bash
+python3 -m py_compile web/app.py
+shellcheck instalador/*.sh
+shellcheck testes/*.sh
+shellcheck scripts/*.sh
 ```
 
 ## ShellCheck
