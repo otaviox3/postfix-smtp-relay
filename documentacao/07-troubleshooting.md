@@ -1,4 +1,4 @@
-# Instalação
+# Troubleshooting
 
 ## Resumo
 
@@ -22,3 +22,17 @@ postconf -n
 journalctl -fu postfix
 postqueue -p
 ```
+
+## Erros comuns
+
+### 535 Authentication Failed
+
+Validar usuário, senha e permissão de SMTP AUTH.
+
+### 554 Relaying Denied
+
+Validar `sasl_passwd`, `postmap` e autenticação SASL.
+
+### Connection timed out
+
+Validar firewall, rota e liberação de porta.

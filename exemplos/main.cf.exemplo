@@ -1,0 +1,13 @@
+relayhost = [smtp.exemplo.com]:25
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtp_sasl_mechanism_filter = plain, login
+smtp_tls_security_level = encrypt
+smtp_tls_wrappermode = no
+smtp_tls_protocols = TLSv1.2
+smtp_tls_mandatory_protocols = TLSv1.2
+smtp_tls_loglevel = 1
+inet_interfaces = loopback-only
+mydestination =

@@ -1,0 +1,27 @@
+name: Validação Shell
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validacao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Instalar ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Validar sintaxe Bash
+        run: |
+          bash -n instalador/instalar-postfix-relay.sh
+          bash -n instalador/validar-instalacao.sh
+          bash -n instalador/rollback.sh
+          bash -n testes/testar-conectividade.sh
+          bash -n testes/testar-openssl.sh
+          bash -n testes/testar-swaks.sh
+          bash -n testes/testar-postfix.sh
+      - name: ShellCheck
+        run: |
+          shellcheck instalador/*.sh || true
+          shellcheck testes/*.sh || true

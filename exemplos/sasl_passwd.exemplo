@@ -1,0 +1,2 @@
+[smtp.exemplo.com]:25 naoresponda@exemplo.com:SENHA_AQUI
+[smtp.exemplo.com]:465 naoresponda@exemplo.com:SENHA_AQUI
