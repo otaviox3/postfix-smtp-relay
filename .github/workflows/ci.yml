@@ -7,21 +7,42 @@ on:
 jobs:
   validacao:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Instalar ShellCheck
-        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Instalar dependências
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
       - name: Validar sintaxe Bash
         run: |
-          bash -n instalador/instalar-postfix-relay.sh
-          bash -n instalador/validar-instalacao.sh
-          bash -n instalador/rollback.sh
-          bash -n testes/testar-conectividade.sh
-          bash -n testes/testar-openssl.sh
-          bash -n testes/testar-swaks.sh
-          bash -n testes/testar-postfix.sh
-      - name: ShellCheck
+          find instalador testes -name "*.sh" -type f -print0 | xargs -0 -I{} bash -n {}
+
+      - name: Executar ShellCheck
         run: |
-          shellcheck instalador/*.sh || true
-          shellcheck testes/*.sh || true
+          shellcheck instalador/*.sh
+          shellcheck testes/*.sh
+
+      - name: Verificar arquivos sensíveis
+        run: |
+          if grep -RniE "EXEMPLO_SENHA|naoresponda-exemplo|empresa-exemplo|dominio-exemplo|sistema-exemplo|10\.100|password real|senha real" . --exclude-dir=.git; then
+            echo "Possível dado sensível encontrado."
+            exit 1
+          fi
+
+      - name: Verificar links internos básicos
+        run: |
+          test -f README.md
+          test -f documentacao/01-visao-geral.md
+          test -f documentacao/02-arquitetura.md
+          test -f documentacao/03-instalacao.md
+          test -f documentacao/04-configuracao.md
+          test -f documentacao/05-validacao.md
+          test -f documentacao/06-testes.md
+          test -f documentacao/07-troubleshooting.md
+          test -f documentacao/08-seguranca.md
+          test -f documentacao/09-faq.md
+          test -f documentacao/10-roadmap.md

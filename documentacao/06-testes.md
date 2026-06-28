@@ -1,16 +1,26 @@
 # Testes
 
-## Teste de DNS e porta
+## Objetivo
+
+Este capítulo descreve os scripts disponíveis para validar a solução.
+
+A partir da versão v1.2.0, o projeto possui testes separados por finalidade e um script geral para executar a validação completa.
+
+## Teste de DNS
+
+```bash
+SMTP_HOST="smtp.exemplo.com" ./testes/testar-dns.sh
+```
+
+Valida se o host SMTP externo resolve corretamente.
+
+## Teste de conectividade
 
 ```bash
 SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" ./testes/testar-conectividade.sh
 ```
 
-Esse teste valida:
-
-- resolução DNS;
-- conectividade TCP;
-- liberação da porta.
+Valida se a porta TCP está acessível.
 
 ## Teste TLS
 
@@ -18,9 +28,9 @@ Esse teste valida:
 SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" TLS_MODE="starttls" ./testes/testar-openssl.sh
 ```
 
-Esse teste valida se o SMTP aceita STARTTLS/TLS.
+Valida a negociação TLS com `openssl`.
 
-## Teste SMTP AUTH com Swaks
+## Teste SMTP AUTH
 
 ```bash
 SMTP_HOST="smtp.exemplo.com" \
@@ -32,12 +42,15 @@ TEST_TO="destino@exemplo.com" \
 ./testes/testar-swaks.sh
 ```
 
-Esse teste valida:
+Valida autenticação e envio direto usando Swaks.
 
-- conexão;
-- STARTTLS;
-- autenticação;
-- envio SMTP.
+## Teste da fila
+
+```bash
+./testes/testar-fila.sh
+```
+
+Mostra fila do Postfix e últimos logs.
 
 ## Teste local via Postfix
 
@@ -47,11 +60,17 @@ TEST_TO="destino@exemplo.com" \
 ./testes/testar-postfix.sh
 ```
 
-Esse teste valida se o Postfix local está encaminhando mensagens corretamente.
+Valida envio pela interface local do Postfix.
 
-## Resultado esperado
+## Validação completa
 
-```text
-status=sent
-250 Message accepted
+```bash
+SMTP_HOST="smtp.exemplo.com" \
+SMTP_PORT="25" \
+TLS_MODE="starttls" \
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+./testes/testar-tudo.sh
 ```
+
+Esse script executa os testes principais em sequência.

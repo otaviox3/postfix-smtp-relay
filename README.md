@@ -4,29 +4,51 @@
 ![Linux](https://img.shields.io/badge/Linux-Oracle%20Linux%20%7C%20RHEL%20%7C%20Rocky%20%7C%20Alma-red)
 ![Postfix](https://img.shields.io/badge/Postfix-SMTP%20Relay-blue)
 ![Shell](https://img.shields.io/badge/Shell-Bash-green)
+![CI](https://img.shields.io/badge/GitHub%20Actions-Shell%20Validation-blue)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)
 
 ## Sobre o projeto
 
-Este projeto fornece uma solução para configurar o **Postfix como relay SMTP local** para aplicações legadas que precisam enviar e-mails por meio de servidores SMTP modernos com autenticação, STARTTLS e TLS.
+O **Postfix SMTP Relay** é uma solução em português para configurar o **Postfix como relay SMTP local** para aplicações legadas.
 
-A aplicação envia e-mails para `127.0.0.1:25`, e o Postfix fica responsável por autenticar, negociar TLS, enfileirar, registrar logs e encaminhar a mensagem para o servidor SMTP externo.
+A proposta é permitir que uma aplicação antiga envie e-mails para `127.0.0.1:25`, enquanto o Postfix fica responsável por autenticação SMTP, STARTTLS/TLS, fila, logs, retry e encaminhamento para o servidor SMTP externo.
+
+Essa abordagem é útil quando a aplicação não consegue negociar corretamente TLS moderno ou autenticação SMTP, mas ainda precisa enviar mensagens por uma infraestrutura de e-mail atual.
+
+---
 
 ## Índice
 
 - [Problema resolvido](#problema-resolvido)
+- [Como a solução funciona](#como-a-solução-funciona)
 - [Arquitetura](#arquitetura)
-- [Benefícios](#benefícios)
+- [Funcionalidades](#funcionalidades)
+- [Estrutura do projeto](#estrutura-do-projeto)
 - [Instalação rápida](#instalação-rápida)
-- [Configuração esperada na aplicação](#configuração-esperada-na-aplicação)
-- [Testes](#testes)
+- [Instalação com variáveis](#instalação-com-variáveis)
+- [Configuração na aplicação](#configuração-na-aplicação)
+- [Testes disponíveis](#testes-disponíveis)
+- [Validação completa](#validação-completa)
 - [Troubleshooting rápido](#troubleshooting-rápido)
+- [Segurança](#segurança)
 - [Documentação](#documentação)
 - [Roadmap](#roadmap)
+- [Autor](#autor)
+- [Licença](#licença)
+
+---
 
 ## Problema resolvido
 
-Aplicações legadas podem apresentar erros ao tentar enviar e-mails diretamente para servidores SMTP que exigem autenticação e TLS moderno.
+Aplicações legadas podem falhar ao enviar e-mails diretamente para servidores SMTP modernos que exigem:
+
+- SMTP AUTH;
+- STARTTLS;
+- TLS 1.2 ou superior;
+- remetente autorizado;
+- políticas mais rígidas contra relay aberto.
+
+Erros comuns:
 
 ```text
 535 Authentication Failed
@@ -34,6 +56,28 @@ Aplicações legadas podem apresentar erros ao tentar enviar e-mails diretamente
 SSLHandshakeException
 Connection timed out
 ```
+
+Com esta solução, a aplicação deixa de negociar TLS diretamente. O Postfix assume essa responsabilidade.
+
+---
+
+## Como a solução funciona
+
+A aplicação passa a enviar e-mails localmente:
+
+```text
+127.0.0.1:25
+```
+
+O Postfix recebe essa mensagem local e encaminha para o SMTP externo com:
+
+- autenticação SMTP;
+- STARTTLS/TLS;
+- controle de fila;
+- retry automático;
+- logs detalhados.
+
+---
 
 ## Arquitetura
 
@@ -49,8 +93,8 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A[Aplicação legada] -->|SMTP local sem autenticação<br>127.0.0.1:25| B[Postfix Relay Local]
-    B -->|SMTP AUTH<br>STARTTLS<br>TLS 1.2| C[Servidor SMTP externo]
+    A[Aplicação legada] -->|SMTP local<br>127.0.0.1:25| B[Postfix Relay Local]
+    B -->|SMTP AUTH<br>STARTTLS/TLS 1.2| C[Servidor SMTP externo]
     C --> D[Destinatários]
 ```
 
@@ -62,37 +106,93 @@ sequenceDiagram
     participant PF as Postfix local
     participant SMTP as SMTP externo
     participant DST as Destinatário
-    APP->>PF: Envia via 127.0.0.1:25
+
+    APP->>PF: Envia mensagem via 127.0.0.1:25
     PF->>PF: Enfileira mensagem
     PF->>SMTP: Conecta no SMTP externo
-    PF->>SMTP: STARTTLS
+    PF->>SMTP: STARTTLS/TLS
     SMTP-->>PF: TLS estabelecido
-    PF->>SMTP: SMTP AUTH/SASL
+    PF->>SMTP: Autentica via SASL
     SMTP-->>PF: Autenticação aceita
-    PF->>SMTP: MAIL FROM / RCPT TO / DATA
+    PF->>SMTP: Envia mensagem
     SMTP-->>PF: 250 Message accepted
-    SMTP->>DST: Entrega
+    SMTP->>DST: Entrega ao destinatário
 ```
 
-## Benefícios
+---
 
-- Compatibilidade com aplicações legadas.
-- Nenhuma alteração obrigatória no código da aplicação.
-- Autenticação SMTP centralizada no Postfix.
-- STARTTLS/TLS tratado pelo Postfix.
-- Fila local de mensagens.
-- Retry automático.
-- Logs detalhados via `journalctl`.
-- Facilidade para trocar o servidor SMTP futuramente.
+## Funcionalidades
+
+- [x] Configuração do Postfix como relay SMTP local.
+- [x] Suporte a STARTTLS.
+- [x] Suporte a TLS 1.2.
+- [x] SMTP AUTH via SASL.
+- [x] Instalador em Bash.
+- [x] Backup antes de alterar configurações.
+- [x] Script de rollback.
+- [x] Scripts de teste.
+- [x] Validação completa em um único comando.
+- [x] GitHub Actions para validação de Shell.
+- [x] Documentação em português.
+- [ ] Playbook Ansible.
+- [ ] Dockerfile para laboratório.
+- [ ] GitHub Pages.
+- [ ] Exemplos por stack de aplicação.
+
+---
+
+## Estrutura do projeto
+
+```text
+.
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+├── ROADMAP.md
+├── instalador
+│   ├── instalar-postfix-relay.sh
+│   ├── rollback.sh
+│   └── validar-instalacao.sh
+├── documentacao
+│   ├── 01-visao-geral.md
+│   ├── 02-arquitetura.md
+│   ├── 03-instalacao.md
+│   ├── 04-configuracao.md
+│   ├── 05-validacao.md
+│   ├── 06-testes.md
+│   ├── 07-troubleshooting.md
+│   ├── 08-seguranca.md
+│   ├── 09-faq.md
+│   └── 10-roadmap.md
+├── exemplos
+├── testes
+│   ├── testar-conectividade.sh
+│   ├── testar-dns.sh
+│   ├── testar-fila.sh
+│   ├── testar-openssl.sh
+│   ├── testar-postfix.sh
+│   ├── testar-swaks.sh
+│   └── testar-tudo.sh
+└── .github
+    └── workflows
+        └── ci.yml
+```
+
+---
 
 ## Instalação rápida
 
 ```bash
 git clone git@github.com:otaviox3/postfix-smtp-relay.git
 cd postfix-smtp-relay
+
 chmod +x instalador/instalar-postfix-relay.sh
 sudo ./instalador/instalar-postfix-relay.sh
 ```
+
+---
 
 ## Instalação com variáveis
 
@@ -109,61 +209,131 @@ RUN_SEND_TEST="yes" \
 ./instalador/instalar-postfix-relay.sh
 ```
 
-## Configuração esperada na aplicação
+---
+
+## Configuração na aplicação
+
+Após instalar o relay local, configure a aplicação assim:
 
 ```text
 Host SMTP: 127.0.0.1
 Porta SMTP: 25
 SSL: desabilitado
 STARTTLS: desabilitado
-Autenticação: desabilitada
+Autenticação SMTP: desabilitada
 Remetente: e-mail autorizado no SMTP externo
 ```
 
 > [!IMPORTANT]
-> A aplicação não precisa conhecer usuário, senha ou TLS. Quem faz isso é o Postfix.
+> A aplicação não deve autenticar no Postfix local. Quem autentica no SMTP externo é o Postfix.
 
-## Testes
+---
+
+## Testes disponíveis
+
+### DNS
+
+```bash
+SMTP_HOST="smtp.exemplo.com" ./testes/testar-dns.sh
+```
+
+### Conectividade
 
 ```bash
 SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" ./testes/testar-conectividade.sh
-SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" TLS_MODE="starttls" ./testes/testar-openssl.sh
-MAIL_FROM="naoresponda@exemplo.com" TEST_TO="destino@exemplo.com" ./testes/testar-postfix.sh
 ```
 
-## Logs
+### TLS
 
 ```bash
-journalctl -fu postfix
-postqueue -p
-postsuper -d ALL
+SMTP_HOST="smtp.exemplo.com" SMTP_PORT="25" TLS_MODE="starttls" ./testes/testar-openssl.sh
 ```
 
-## Resultado esperado
+### SMTP AUTH com Swaks
 
-```text
-Trusted TLS connection established
-status=sent
-250 Message accepted
+```bash
+SMTP_HOST="smtp.exemplo.com" \
+SMTP_PORT="25" \
+SMTP_USER="naoresponda@exemplo.com" \
+SMTP_PASS="SENHA_AQUI" \
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+./testes/testar-swaks.sh
 ```
+
+### Postfix local
+
+```bash
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+./testes/testar-postfix.sh
+```
+
+### Fila
+
+```bash
+./testes/testar-fila.sh
+```
+
+---
+
+## Validação completa
+
+Execute todos os testes básicos:
+
+```bash
+SMTP_HOST="smtp.exemplo.com" \
+SMTP_PORT="25" \
+TLS_MODE="starttls" \
+MAIL_FROM="naoresponda@exemplo.com" \
+TEST_TO="destino@exemplo.com" \
+./testes/testar-tudo.sh
+```
+
+---
 
 ## Troubleshooting rápido
 
-### 535 Authentication Failed
+### `535 Authentication Failed`
 
-Verifique usuário SMTP, senha SMTP, permissão de SMTP AUTH, arquivo `sasl_passwd` e execução do `postmap`.
+Verifique usuário, senha, permissão de SMTP AUTH e entrada no `sasl_passwd`.
 
-### 554 Relaying Denied
+### `554 Relaying Denied`
 
-Verifique autenticação SASL, porta configurada no `relayhost`, porta configurada no `sasl_passwd` e retorno do `postmap -q`.
+Verifique se o Postfix autenticou corretamente e se a porta do `relayhost` corresponde à entrada do `sasl_passwd`.
 
-### Connection timed out
+### `Connection timed out`
 
-Verifique firewall, ACL, rota e liberação da porta SMTP.
+Verifique DNS, firewall, ACL, rota e liberação da porta SMTP.
+
+### `Different sender identity is not allowed`
+
+Verifique se o remetente usado pela aplicação é o mesmo autorizado no servidor SMTP externo.
+
+---
 
 ## Segurança
 
-Nunca suba credenciais reais para o GitHub. Use exemplos como `smtp.exemplo.com` e `naoresponda@exemplo.com`.
+Nunca suba credenciais reais para o GitHub.
+
+Arquivos sensíveis:
+
+```text
+/etc/postfix/sasl_passwd
+/etc/postfix/sasl_passwd.db
+.env
+*.secret
+```
+
+Use exemplos genéricos:
+
+```text
+smtp.exemplo.com
+naoresponda@exemplo.com
+SENHA_AQUI
+```
+
+---
 
 ## Documentação
 
@@ -178,18 +348,30 @@ Nunca suba credenciais reais para o GitHub. Use exemplos como `smtp.exemplo.com`
 - [FAQ](documentacao/09-faq.md)
 - [Roadmap](documentacao/10-roadmap.md)
 
+---
+
 ## Roadmap
 
 - [x] Instalador interativo.
-- [x] STARTTLS/TLS 1.2.
-- [x] SMTP AUTH via SASL.
-- [x] Scripts de teste.
 - [x] Documentação em português.
-- [x] Script de rollback básico.
+- [x] GitHub Actions.
+- [x] Script de rollback.
+- [x] Validação completa.
+- [ ] Exemplos por aplicação.
 - [ ] Playbook Ansible.
-- [ ] Dockerfile para laboratório.
+- [ ] Dockerfile de laboratório.
 - [ ] GitHub Pages.
+
+---
 
 ## Autor
 
 Desenvolvido por **Otávio Azevedo**.
+
+Projeto criado como estudo e documentação prática de uma solução de infraestrutura para compatibilizar aplicações legadas com servidores SMTP modernos.
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT.
